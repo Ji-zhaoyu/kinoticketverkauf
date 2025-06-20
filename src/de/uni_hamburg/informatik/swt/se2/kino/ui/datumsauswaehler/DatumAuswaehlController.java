@@ -2,6 +2,7 @@ package de.uni_hamburg.informatik.swt.se2.kino.ui.datumsauswaehler;
 
 import javax.swing.JPanel;
 
+import de.uni_hamburg.informatik.swt.se2.kino.ui.kasse.Beobachtbar;
 import de.uni_hamburg.informatik.swt.se2.kino.wertobjekte.Datum;
 
 /**
@@ -13,7 +14,7 @@ import de.uni_hamburg.informatik.swt.se2.kino.wertobjekte.Datum;
  * @author SE2-Team
  * @version SoSe 2024
  */
-public class DatumAuswaehlController
+public class DatumAuswaehlController extends Beobachtbar
 {
     private DatumAuswaehlView _view;
     private Datum _ausgewaehltesDatum;
@@ -37,7 +38,8 @@ public class DatumAuswaehlController
     {
         _ausgewaehltesDatum = _ausgewaehltesDatum.vorherigerTag();
         _view.getDatumLabel()
-                .setText(_ausgewaehltesDatum.getFormatiertenString());
+            .setText(_ausgewaehltesDatum.getFormatiertenString());
+        meldeAenderung();
     }
 
     /**
@@ -47,7 +49,8 @@ public class DatumAuswaehlController
     {
         _ausgewaehltesDatum = _ausgewaehltesDatum.naechsterTag();
         _view.getDatumLabel()
-                .setText(_ausgewaehltesDatum.getFormatiertenString());
+            .setText(_ausgewaehltesDatum.getFormatiertenString());
+        meldeAenderung();
     }
 
     /**
@@ -77,8 +80,10 @@ public class DatumAuswaehlController
      */
     private void registriereUIAktionen()
     {
-        _view.getZurueckButton().addActionListener(e -> zurueckButtonWurdeGedrueckt());
+        _view.getZurueckButton()
+            .addActionListener(e -> zurueckButtonWurdeGedrueckt());
 
-        _view.getWeiterButton().addActionListener(e -> weiterButtonWurdeGedrueckt());
+        _view.getWeiterButton()
+            .addActionListener(e -> weiterButtonWurdeGedrueckt());
     }
 }

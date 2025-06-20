@@ -16,7 +16,7 @@ import de.uni_hamburg.informatik.swt.se2.kino.wertobjekte.Datum;
  * @author SE2-Team
  * @version SoSe 2024
  */
-public class KassenController
+public class KassenController implements Beobachter
 {
     // Die Entität, die durch dieses UI-Modul verwaltet wird.
     private Kino _kino;
@@ -28,6 +28,21 @@ public class KassenController
     private PlatzVerkaufsController _platzVerkaufsController;
     private DatumAuswaehlController _datumAuswaehlController;
     private VorstellungsAuswaehlController _vorstellungAuswaehlController;
+
+    @Override
+    public void beobachteAenderung(Object object)
+    {
+        assert object != null : "Vorbedingung verletzt: object != null";
+
+        if (object == _datumAuswaehlController)
+        {
+            setzeTagesplanFuerAusgewaehltesDatum();
+        }
+        else if (object == _vorstellungAuswaehlController)
+        {
+            setzeAusgewaehlteVorstellung();
+        }
+    }
 
     /**
      * Initialisiert das Kassenmodul.
@@ -46,6 +61,8 @@ public class KassenController
         _platzVerkaufsController = new PlatzVerkaufsController();
         _datumAuswaehlController = new DatumAuswaehlController();
         _vorstellungAuswaehlController = new VorstellungsAuswaehlController();
+        _datumAuswaehlController.fuegeBeobachterHinzu(this);
+        _vorstellungAuswaehlController.fuegeBeobachterHinzu(this);
 
         // View erstellen (mit eingebetteten Views der direkten Submodule)
         _view = new KassenView(_platzVerkaufsController.getUIPanel(),
@@ -64,7 +81,8 @@ public class KassenController
      */
     private void registriereUIAktionen()
     {
-        _view.getBeendenButton().addActionListener(e -> reagiereAufBeendenButton());
+        _view.getBeendenButton()
+            .addActionListener(e -> reagiereAufBeendenButton());
     }
 
     /**
